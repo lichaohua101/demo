@@ -1,0 +1,213 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.gxuc</groupId>
+  <artifactId>demo</artifactId>
+  <version>0.1.0</version>
+  
+  <packaging>war</packaging>
+  <name>base-manager webapp</name>
+  <url>http://www.gxucreate.com</url>
+  
+  <properties>
+	<!-- SPRING & HIBERNATE / JPA -->
+	<spring.version>4.3.10.RELEASE</spring.version>
+	<springdata.version>1.11.8.RELEASE</springdata.version>
+	<hibernate.version>4.3.11.Final</hibernate.version>
+	<base-manager.ver>0.1.0</base-manager.ver>
+	<jackson.version>2.9.2</jackson.version>
+	<mysql.version>5.1.44</mysql.version>
+  </properties>
+	  
+  <dependencies>
+  <!-- 公司框架base manager -->
+		<dependency>
+			<groupId>com.gxuc</groupId>
+			<artifactId>base-manager</artifactId>
+			<version>${base-manager.ver}</version>
+			<!-- type：默认为jar类型，常用的类型有：jar,ejb-client,test-jar...,
+			可设置plugins中的extensions值为true后在增加 新的类型， -->
+			<type>war</type>
+		</dependency>
+		<dependency>
+		<!-- 公司框架base manager -->
+			<groupId>com.gxuc</groupId>
+			<artifactId>base-manager</artifactId>
+			<version>${base-manager.ver}</version>
+			<classifier>classes</classifier>
+				<!-- provided依赖只有在当JDK或者一个容器已提供该依赖之后才使用。例如，如果
+				你开发了一个web应用，你可能在编译classpath中需要可用的Servlet API来编
+				译一个servlet，但是你不会想要在打包好的WAR中包含这个Servlet API；这个
+				Servlet API JAR由你的应用服务器或者servlet容器提供。已提供范围的依赖在
+				编译classpath（不是运行时）可用。它们不是传递性的，也不会被打包。 -->
+			<scope>provided</scope>
+		</dependency>
+		
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- spring lib -->
+	<dependency>
+		<groupId>org.springframework.data</groupId>
+		<artifactId>spring-data-jpa</artifactId>
+		<version>${springdata.version}</version>
+	</dependency>	
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-aspects</artifactId>
+		<version>${spring.version}</version>
+	</dependency>	
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-context-support</artifactId>
+		<version>${spring.version}</version>
+	</dependency>		
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-webmvc</artifactId>
+		<version>${spring.version}</version>
+	</dependency>
+	
+	<!-- hibernate lib -->
+	<dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-core</artifactId>
+		<version>${hibernate.version}</version>
+	</dependency>   
+	<dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-entitymanager</artifactId>
+		<version>${hibernate.version}</version>
+	</dependency>
+	<!--  <dependency>  需要用下面的hibernate-jpa-2.1-api版本否则会报异常: java.lang.NoSuchMethodError: javax.persistence.spi.PersistenceUnitInfo.getValidationMode()Ljavax/persistence/ValidationMode
+		<groupId>org.hibernate</groupId>
+		<artifactId>ejb3-persistence</artifactId>
+		<version>1.0.2.GA</version>
+	</dependency> -->
+	<dependency>
+	  <groupId>org.hibernate.javax.persistence</groupId>
+	  <artifactId>hibernate-jpa-2.1-api</artifactId>
+	  <version>1.0.0.Final</version>
+	</dependency>	
+	<!-- <dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-validator</artifactId>
+		<version>4.3.2.Final</version>
+	</dependency> --> 	
+	
+	<!-- aop lib -->
+	<dependency>
+		<groupId>aopalliance</groupId>
+		<artifactId>aopalliance</artifactId>
+		<version>1.0</version>
+	</dependency>	
+	<dependency>
+		<groupId>org.aspectj</groupId>
+		<artifactId>aspectjweaver</artifactId>
+		<version>1.8.12</version>
+	</dependency>
+	
+	<!-- mysql&pool lib -->
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>${mysql.version}</version>
+	</dependency>	
+	<!-- 
+	<dependency>
+		<groupId>com.mchange</groupId>
+		<artifactId>c3p0</artifactId>
+		<version>0.9.5.2</version>
+	</dependency>
+	 --> 
+	
+	<!-- file upload -->
+	<dependency>
+		<groupId>commons-fileupload</groupId>
+		<artifactId>commons-fileupload</artifactId>
+		<version>1.3.3</version>
+	</dependency> 
+	
+	 <!-- json -->
+	 <dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-core</artifactId>
+		<version>${jackson.version}</version>
+	</dependency> 
+	 <dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-databind </artifactId>
+		<version>${jackson.version}</version>
+	</dependency> 	
+	
+	<!-- jstl -->
+	 <dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>jstl</artifactId>
+		<version>1.2</version>
+	</dependency> 		
+	
+	<!-- maven打包时依赖 -->
+	<dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>javax.servlet-api</artifactId>
+	    <version>3.0.1</version>
+	    <scope>provided</scope>
+	</dependency>
+	<dependency>
+	    <groupId>javax.servlet.jsp</groupId>
+	    <artifactId>javax.servlet.jsp-api</artifactId>
+	    <version>2.3.1</version>
+	    <scope>provided</scope>
+	</dependency>	
+	 
+  </dependencies>
+  
+  <build>
+    <finalName>base-manager</finalName>
+    <!-- 配置源码目录
+	<sourceDirectory>src/base/java</sourceDirectory>
+	<resources>
+		<resource>
+			<filtering>true</filtering>
+			<directory>src/base/resources</directory>
+		</resource>
+	</resources> -->
+	
+	<!-- 打包classes的jar时,排除配置文件 -->
+	<resources>
+		<resource>
+	        <directory>src/main/resources</directory>
+	        <filtering>true</filtering>
+	        <excludes>
+				<exclude>*.xml</exclude>    
+				<exclude>config.properties</exclude>  			
+	        </excludes>
+		</resource>
+	</resources>
+	  	
+    <plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+        	<!-- classes打包成jar -->
+        	<archiveClasses>true</archiveClasses>
+        	<!-- 生成单独jar包到仓库 -->
+        	<attachClasses>true</attachClasses>
+        	<!-- <packagingExcludes>WEB-INF/classes/com/**</packagingExcludes> -->
+        	<!-- 配置文件拷贝到classes目录下 -->
+	        <webResources>
+	            <resource>
+	                <directory>src/main/resources</directory>
+	                <targetPath>WEB-INF/classes</targetPath>
+	            </resource>
+	        </webResources>
+        </configuration>
+      </plugin>
+    </plugins>   
+  </build>
+</project>

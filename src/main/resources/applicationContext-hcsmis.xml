@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+            
+ 	 <!-- https://blog.csdn.net/you18131371836/article/details/53691044?utm_source=blogxgwz5
+    	表明com.gxuc.hcsmis包及其子包中，如果某个类的头上带有特定的注解
+		@Component，@Repository，@Service，@Controller，就会将这个对象作为Bean注入进spring容器。 
+		<context:component-scan>提供两个子标签：<context:include-filter>和<context:exclude-filter>各代表引入和排除的过滤。-->
+    <context:component-scan base-package="com.gxuc.hcsmis">
+        <!-- 不加载Controller,由mvc中的容器加载 -->
+    	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    
+    <!-- 配置Repository的扫描路径,并设置基础实现类 -->
+	<jpa:repositories base-package="com.gxuc.hcsmis.repository" base-class="com.gxuc.repository.BaseRepositoryImpl">
+	    <!-- 可以设置过滤条件
+	    <context:exclude-filter type="regex" expression=".*SomeRepository" />
+	     -->
+	</jpa:repositories>
+      
+     <!-- 
+    	 https://www.cnblogs.com/mxck/p/7027912.html?utm_source=itdadao&utm_medium=referral
+     	简单说就是，只要com.how2java.service这个包中的ProductService类的任意一个函数被调用，不管你的返回值是什么，都会触发开关，我就会去执行切面， -->      
+    <aop:config>
+        <aop:pointcut id="hcsmisServiceMethod" expression="execution(* com.gxuc.hcsmis.service.*.*.*(..))" />
+        <aop:advisor pointcut-ref="hcsmisServiceMethod" advice-ref="txAdvice" order="2"/>
+        <!-- 配置aop进行日志记录,根据需要开启 开启时需设置事务order比日志order大,否则有可能事务会先与日志执行
+        <aop:aspect ref="systemlog" order="1">
+        	<aop:after method="systemLog" pointcut="execution(* com.gxuc.callmaster.service.impl.*.save*(..)) or execution(* com.gxuc.callmaster.service.impl.*.update*(..)) or execution(* com.gxuc.callmaster.service.impl.*.del*(..))" />
+        </aop:aspect> -->
+    </aop:config>  
+    
+</beans>

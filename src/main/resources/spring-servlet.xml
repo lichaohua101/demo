@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"    
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"    
+        xmlns:context="http://www.springframework.org/schema/context" 
+        xmlns:mvc="http://www.springframework.org/schema/mvc"   
+   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd  
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd  
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+       http://www.springframework.org/schema/mvc 
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+ 
+    <!-- 启用spring mvc 注解 
+    	https://blog.csdn.net/fox_bert/article/details/80793030
+    	这样就可以使用@ Resource 、@ PostConstruct、@ PreDestroy、@PersistenceContext、@Autowired、@Required等注解了，就可以实现自动注入
+		注册这4个 BeanPostProcessor的作用，就是为了你的系统能够识别相应的注解。
+    -->
+    <context:annotation-config />
+ 
+    <!-- 设置使用注解的类所在的jar包
+    https://www.cnblogs.com/vanl/p/5733655.html
+     -->																  							   
+    <context:component-scan base-package="com.gxuc.base.controller,com.gxuc.hcsmis.controller" />
+ 
+    <!-- <mvc:annotation-driven/> 不使用此是因为用到的validation-api会自动要找对应的验证实现,否则会报错  -->
+    <!-- 基于类的注解 -->
+	<!-- <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"> -->
+	
+	<!-- 使用RequestMappingHandlerMapping及RequestMappingHandlerAdapter后,才可以在拦截器中使用HandlerMethod -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jsonHttpMessageConverter" />
+				<ref bean="stringHttpMessageConverter" />
+			</list>
+		</property>  
+	</bean> 	    
+	<!-- 支持json的转换器 -->
+	<bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+	    <!-- json返回格式化时间 -->
+		<property name="objectMapper">
+			<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+				<property name="dateFormat">
+					<bean class="java.text.SimpleDateFormat">
+						<constructor-arg type ="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+	                </bean>
+	            </property>
+	        </bean>
+	    </property>
+	</bean>
+	<!-- 支持string的转换器 -->
+    <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+      <!-- 
+      <property name="supportedMediaTypes" value = "text/plain;charset=UTF-8" />
+       -->
+    </bean>	
+	<!-- 文件上传支持 -->
+	<bean id="multipartResolver" class="com.gxuc.base.spring.UCMultipartResolver">
+	    <!-- 最大上传大小 -->
+	    <property name="maxUploadSize">  
+	        <value>1048576</value>  
+	    </property>  	
+	    <property name="defaultEncoding" value="utf8" />  
+	</bean>	    
+    <!-- 基于方法的注解
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />  -->
+    
+ 	<!-- 配置拦截器 
+ 		https://www.cnblogs.com/lcngu/p/7096597.html
+ 	-->
+    <mvc:interceptors> 
+         <mvc:interceptor>
+            <!-- 只拦截manager下BaseController的子Controller -->
+            <mvc:mapping path="/manager/**"/>
+            <bean class="com.gxuc.base.interceptor.SpringInterceptor"/>   
+        </mvc:interceptor>
+        
+    </mvc:interceptors>
+    
+    <!-- 对转向页面的路径解析。prefix：前缀， suffix：后缀 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
+    
+	
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">   
+        <!-- 设置日志输出级别，不定义则默认不输出警告等错误日志信息 -->
+        <property name="warnLogCategory" value="WARN"></property>  
+    </bean>
+    
+    <bean class="com.gxuc.base.exception.UCHandlerExceptionResolver" />
+    <!-- 全局异常配置 start
+    <bean id="exceptionResolver" class="com.gxetu.base.exception.MyHandlerExceptionResolver" p:order="0"/> --> 
+      
+    <!-- 全局异常配置 end -->    
+    
+</beans>

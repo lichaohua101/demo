@@ -12,7 +12,7 @@
   <properties>
 	<!-- SPRING & HIBERNATE / JPA -->
 	<spring.version>4.3.10.RELEASE</spring.version>
-	<springdata.version>1.11.8.RELEASE</springdata.version>
+	<springdata.version>1.11.23.RELEASE</springdata.version>
 	<hibernate.version>4.3.11.Final</hibernate.version>
 	<base-manager.ver>0.1.0</base-manager.ver>
 	<jackson.version>2.9.2</jackson.version>

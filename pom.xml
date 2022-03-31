@@ -11,7 +11,7 @@
   
   <properties>
 	<!-- SPRING & HIBERNATE / JPA -->
-	<spring.version>4.3.10.RELEASE</spring.version>
+	<spring.version>5.3.18</spring.version>
 	<springdata.version>1.11.8.RELEASE</springdata.version>
 	<hibernate.version>4.3.11.Final</hibernate.version>
 	<base-manager.ver>0.1.0</base-manager.ver>
